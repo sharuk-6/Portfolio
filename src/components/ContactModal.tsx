@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Mail, Phone, MessageSquare, Copy, Check, Send, MapPin } from 'lucide-react';
-import { HoldButton } from './HoldButton';
+import { SlideCommit } from './SlideCommit';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -32,7 +32,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
     setTimeout(() => setCopiedPhone(false), 2000);
   };
 
-  // Triggered ONLY after holding the button for confirmation
+  // Triggered ONLY after sliding the handle to confirm
   const handleConfirmedEmail = () => {
     const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
     window.location.href = mailtoUrl;
@@ -64,7 +64,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
         <div className="flex items-center justify-between p-6 border-b border-stone-200 dark:border-[#232936]">
           <div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white font-display">Start a Conversation</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Hold buttons to confirm navigation to email, WhatsApp, or phone dialer.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Slide handle across the track to confirm navigation to email, WhatsApp, or phone dialer.</p>
           </div>
           <button 
             onClick={onClose}
@@ -86,7 +86,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
             </div>
           )}
 
-          {/* Direct Contact Cards with Hold-to-Navigate Buttons */}
+          {/* Direct Contact Cards with Slide-to-Confirm Controls */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             
             {/* WhatsApp Card */}
@@ -110,12 +110,11 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
                 </div>
               </div>
 
-              {/* Hold to Confirm WhatsApp Navigation */}
-              <HoldButton
-                onHoldComplete={handleConfirmedWhatsApp}
-                label="Hold for WhatsApp"
-                holdingLabel="Opening WhatsApp in..."
-                completedLabel="Opening WhatsApp!"
+              {/* Slide to Confirm WhatsApp Navigation */}
+              <SlideCommit
+                onCommit={handleConfirmedWhatsApp}
+                label="Slide for WhatsApp"
+                committedLabel="Opening WhatsApp!"
                 variant="emerald"
                 className="w-full"
                 icon={<MessageSquare className="w-3.5 h-3.5" />}
@@ -143,13 +142,12 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
                 </div>
               </div>
 
-              {/* Hold to Confirm Phone Dial */}
-              <HoldButton
-                onHoldComplete={handleConfirmedPhoneCall}
-                label="Hold to Call"
-                holdingLabel="Dialing phone in..."
-                completedLabel="Dialing..."
-                variant="blue"
+              {/* Slide to Confirm Phone Dial */}
+              <SlideCommit
+                onCommit={handleConfirmedPhoneCall}
+                label="Slide to Call"
+                committedLabel="Dialing..."
+                variant="cyan"
                 className="w-full"
                 icon={<Phone className="w-3.5 h-3.5" />}
               />
@@ -170,14 +168,14 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
             </button>
           </div>
 
-          {/* Email Note Composer with Hold to Confirm */}
+          {/* Email Note Composer with Slide to Confirm */}
           <div className="space-y-4 pt-2 border-t border-stone-200 dark:border-[#232936]">
             <div>
               <h4 className="text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
                 Send Direct Email Note
               </h4>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Compose your message below. Hold the launch button to confirm and open your default email client.
+                Compose your message below. Slide the handle to the right to confirm and open your default email client.
               </p>
             </div>
             
@@ -202,14 +200,13 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
               />
             </div>
 
-            {/* Hold to Confirm Email Client Launch */}
-            <HoldButton
-              onHoldComplete={handleConfirmedEmail}
-              label="Hold to Launch Email Client"
-              holdingLabel="Launching mail client..."
-              completedLabel="Mail Client Launched!"
+            {/* Slide to Confirm Email Client Launch */}
+            <SlideCommit
+              onCommit={handleConfirmedEmail}
+              label="Slide to Launch Email Client"
+              committedLabel="Mail Client Launched!"
               variant="emerald"
-              className="w-full py-3 text-sm"
+              className="w-full h-12 text-sm"
               icon={<Send className="w-4 h-4" />}
             />
           </div>

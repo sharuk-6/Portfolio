@@ -22,7 +22,7 @@ import { ScrollProgress } from './components/ScrollProgress';
 import { SpotlightCard } from './components/SpotlightCard';
 import { SoftAurora } from './components/SoftAurora';
 import { DriftWall } from './components/DriftWall';
-import { HoldButton } from './components/HoldButton';
+import { SlideCommit } from './components/SlideCommit';
 
 // Generated image assets
 const BTP_ARCHITECTURE_IMG = '/src/assets/images/sap_btp_data_architecture_1794291064645.jpg';
@@ -336,16 +336,16 @@ export default function App() {
                   Start a conversation <ArrowUpRight className="w-4 h-4" />
                 </button>
                 
-                {/* Deliberate Hold-to-Navigate Email Confirmation */}
-                <HoldButton
-                  onHoldComplete={() => {
+                {/* ReactBits Slide Commit Email Confirmation */}
+                <SlideCommit
+                  onCommit={() => {
                     window.location.href = 'mailto:shaiksharu10@gmail.com?subject=SAP%20Consulting%20Inquiry';
                   }}
-                  label="Hold to Email"
-                  holdingLabel="Launching mail..."
-                  completedLabel="Mail Launched!"
+                  label="Slide to Email"
+                  committedLabel="Opening Mail!"
                   variant="outline"
                   icon={<Mail className="w-3.5 h-3.5" />}
+                  className="w-48"
                 />
 
                 <a 
@@ -380,16 +380,16 @@ export default function App() {
                 {copiedEmail && <span className="text-emerald-700 dark:text-emerald-400 text-[10px] font-semibold">(Copied)</span>}
               </button>
               
-              {/* Hold to Confirm WhatsApp Navigation */}
-              <HoldButton
-                onHoldComplete={() => {
+              {/* ReactBits Slide Commit for WhatsApp Confirmation */}
+              <SlideCommit
+                onCommit={() => {
                   window.open('https://wa.me/919515994533?text=Hi%20Shaik,%20I%20saw%20your%20SAP%20portfolio', '_blank', 'noopener,noreferrer');
                 }}
-                label="Hold for WhatsApp"
-                holdingLabel="Opening WhatsApp..."
-                completedLabel="Opened!"
-                variant="subtle"
-                className="py-1 px-2.5 text-[11px]"
+                label="Slide for WhatsApp"
+                committedLabel="Opening WhatsApp!"
+                variant="emerald"
+                compact={true}
+                className="w-48"
               />
             </div>
           </div>
@@ -827,15 +827,15 @@ export default function App() {
             >
               Start a Conversation <ArrowUpRight className="w-4 h-4" />
             </button>
-            <HoldButton
-              onHoldComplete={() => {
+            {/* ReactBits Slide Commit for WhatsApp Confirmation */}
+            <SlideCommit
+              onCommit={() => {
                 window.open('https://wa.me/919515994533?text=Hi%20Shaik,%20ready%20to%20discuss%20an%20SAP%20project', '_blank', 'noopener,noreferrer');
               }}
-              label="Hold for WhatsApp"
-              holdingLabel="Opening WhatsApp..."
-              completedLabel="Opened!"
+              label="Slide for WhatsApp"
+              committedLabel="Opening WhatsApp!"
               variant="outline"
-              className="py-3 px-5"
+              className="w-56"
             />
           </div>
         </motion.section>
@@ -857,15 +857,15 @@ export default function App() {
               >
                 shaiksharu10@gmail.com
               </button>
-              <HoldButton
-                onHoldComplete={() => {
+              <SlideCommit
+                onCommit={() => {
                   window.location.href = 'mailto:shaiksharu10@gmail.com';
                 }}
-                label="Hold to Email"
-                holdingLabel="Launching mail client..."
-                completedLabel="Launched!"
-                variant="subtle"
-                className="py-1.5 px-3 text-xs"
+                label="Slide to Email"
+                committedLabel="Opening Mail!"
+                variant="slate"
+                compact={true}
+                className="w-44"
                 icon={<Mail className="w-3.5 h-3.5" />}
               />
             </div>
@@ -877,15 +877,15 @@ export default function App() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-xs font-mono text-slate-600 dark:text-slate-400">
-            <HoldButton
-              onHoldComplete={() => {
+            <SlideCommit
+              onCommit={() => {
                 window.location.href = 'tel:+919515994533';
               }}
-              label="+91 95159 94533"
-              holdingLabel="Dialing..."
-              completedLabel="Dialing!"
+              label="Slide to Call (+91 95159 94533)"
+              committedLabel="Dialing..."
               variant="outline"
-              className="py-1.5 px-3 text-xs font-mono"
+              compact={true}
+              className="w-64"
               icon={<Phone className="w-3 h-3" />}
             />
             <span className="hidden sm:inline text-stone-300 dark:text-slate-700">&bull;</span>
