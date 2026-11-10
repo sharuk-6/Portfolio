@@ -8,26 +8,17 @@ import {
   Moon, 
   GraduationCap, 
   BookOpen, 
-  Layers, 
-  Terminal, 
-  Database, 
-  CheckCircle2, 
-  Briefcase, 
-  Cpu, 
-  Globe, 
-  Copy, 
-  Check, 
-  ChevronRight, 
-  Code2, 
   Sparkles,
-  ArrowRight,
-  ShieldCheck,
   Award
 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { BtpProject } from './types';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { ContactModal } from './components/ContactModal';
 import { BtpArchitectureVisualizer } from './components/BtpArchitectureVisualizer';
+import { StarfieldCanvas } from './components/StarfieldCanvas';
+import { ScrollProgress } from './components/ScrollProgress';
+import { SpotlightCard } from './components/SpotlightCard';
 
 // Generated image assets
 const BTP_ARCHITECTURE_IMG = '/src/assets/images/sap_btp_data_architecture_1794291064645.jpg';
@@ -163,6 +154,7 @@ export default function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [activeCapabilityTab, setActiveCapabilityTab] = useState<'all' | 'functional' | 'btp' | 'technical' | 'ways'>('all');
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [isStarfieldActive, setIsStarfieldActive] = useState(true);
 
   // Theme toggle state (default to dark, persisted in localStorage)
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -195,10 +187,16 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] dark:bg-[#08090a] text-slate-900 dark:text-[#eaebed] flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-700 dark:selection:text-emerald-300 transition-colors">
+    <div className="min-h-screen bg-[#faf8f5] dark:bg-[#08090a] text-slate-900 dark:text-[#eaebed] flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-700 dark:selection:text-emerald-300 transition-colors relative overflow-x-hidden">
       
-      {/* Top Bar Contract: 3 zones separated by gap-8 (Brand Wordmark — Nav Links — 1 Primary Action + Theme Toggle) */}
-      <header className="sticky top-0 z-40 bg-[#faf8f5]/90 dark:bg-[#08090a]/90 backdrop-blur-md border-b border-stone-200 dark:border-[#1b2029] transition-colors">
+      {/* Top Slim Scroll Progress Bar */}
+      <ScrollProgress />
+
+      {/* Interactive Starlight / Data Node Particle Canvas reacting to Mouse Pointer */}
+      {isStarfieldActive && <StarfieldCanvas theme={theme} />}
+
+      {/* Top Navigation Bar: One row, three zones */}
+      <header className="sticky top-0 z-40 bg-[#faf8f5]/85 dark:bg-[#08090a]/85 backdrop-blur-md border-b border-stone-200 dark:border-[#1b2029] transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
           
           {/* Zone 1: Single text element wordmark */}
@@ -210,7 +208,7 @@ export default function App() {
             <span className="text-stone-500 dark:text-slate-400 font-mono text-xs hidden sm:inline">SAP Consultant</span>
           </div>
 
-          {/* Zone 2: 4–5 concise single-line text navigation links */}
+          {/* Zone 2: Concise single-line text navigation links */}
           <nav className="hidden md:flex items-center gap-8 text-xs font-medium text-slate-600 dark:text-slate-300">
             <a href="#capabilities" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
               Capabilities
@@ -221,16 +219,30 @@ export default function App() {
             <a href="#projects" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
               BTP Apps
             </a>
+            <a href="#architecture" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
+              Architecture
+            </a>
             <a href="#education" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
               Education
             </a>
-            <a href="mailto:shaiksharu10@gmail.com" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
-              Contact
-            </a>
           </nav>
 
-          {/* Zone 3: 1 primary action + Light/Dark theme button */}
-          <div className="flex items-center gap-3 shrink-0">
+          {/* Zone 3: Interactive particle toggle, Theme switch, and Primary Action */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* Interactive Stars/Particles Toggle */}
+            <button
+              onClick={() => setIsStarfieldActive(prev => !prev)}
+              aria-label="Toggle starlight interactive particles"
+              title={isStarfieldActive ? 'Disable cursor particle stars' : 'Enable cursor particle stars'}
+              className={`p-2 rounded-lg border transition cursor-pointer flex items-center gap-1 text-xs ${
+                isStarfieldActive 
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400' 
+                  : 'bg-stone-200/50 dark:bg-slate-900 border-stone-300 dark:border-slate-800 text-slate-400'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+            </button>
+
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -246,7 +258,7 @@ export default function App() {
 
             <button 
               onClick={() => setIsContactModalOpen(true)}
-              className="px-4 py-2 text-xs font-semibold text-white dark:text-slate-950 bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 rounded-lg transition-colors whitespace-nowrap shrink-0 shadow-sm cursor-pointer"
+              className="px-4 py-2 text-xs font-semibold text-white dark:text-slate-950 bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 rounded-lg transition-all duration-200 hover:scale-[1.02] whitespace-nowrap shrink-0 shadow-sm cursor-pointer"
             >
               Start a Conversation
             </button>
@@ -255,11 +267,15 @@ export default function App() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-20">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-24 relative z-10">
         
         {/* Hero Split Section */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pt-2">
-          
+        <motion.section 
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pt-2"
+        >
           {/* Left Column: Typographic Hierarchy & Core Pitch */}
           <div className="lg:col-span-7 flex flex-col justify-between space-y-8">
             <div className="space-y-5">
@@ -287,19 +303,19 @@ export default function App() {
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <button 
                   onClick={() => setIsContactModalOpen(true)}
-                  className="px-5 py-2.5 rounded-lg bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 text-white dark:text-slate-950 font-semibold text-xs transition flex items-center gap-2 shadow-sm cursor-pointer"
+                  className="px-5 py-2.5 rounded-lg bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 text-white dark:text-slate-950 font-semibold text-xs transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/20 hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer"
                 >
                   Start a conversation <ArrowUpRight className="w-4 h-4" />
                 </button>
                 <a 
                   href="#work"
-                  className="px-5 py-2.5 rounded-lg bg-white dark:bg-[#141822] hover:bg-stone-100 dark:hover:bg-[#1a212e] text-slate-800 dark:text-slate-200 border border-stone-200 dark:border-[#232936] font-semibold text-xs transition"
+                  className="px-5 py-2.5 rounded-lg bg-white dark:bg-[#141822] hover:bg-stone-100 dark:hover:bg-[#1a212e] text-slate-800 dark:text-slate-200 border border-stone-200 dark:border-[#232936] font-semibold text-xs transition hover:-translate-y-0.5"
                 >
                   View experience
                 </a>
                 <a 
                   href="#projects"
-                  className="px-5 py-2.5 rounded-lg bg-transparent hover:bg-stone-200/50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 border border-stone-300 dark:border-slate-800 font-semibold text-xs transition"
+                  className="px-5 py-2.5 rounded-lg bg-transparent hover:bg-stone-200/50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 border border-stone-300 dark:border-slate-800 font-semibold text-xs transition hover:-translate-y-0.5"
                 >
                   View BTP apps
                 </a>
@@ -325,7 +341,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right Column: High-Fidelity 3D Connected Enterprise Architecture Visualizer */}
+          {/* Right Column: 3D Connected Enterprise Architecture Visualizer */}
           <div className="lg:col-span-5 flex flex-col justify-between bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl overflow-hidden group shadow-sm dark:shadow-none transition-colors">
             
             {/* Visual Frame */}
@@ -354,10 +370,16 @@ export default function App() {
               </p>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Quantified Business Impact Strip (Full-width row below hero split) */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-6 border-y border-stone-200 dark:border-[#1b2029]">
+        <motion.section 
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-6 border-y border-stone-200 dark:border-[#1b2029]"
+        >
           <div className="space-y-1">
             <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-display tabular-nums">Nearly 3 Yrs</div>
             <div className="text-xs text-slate-500 dark:text-slate-400">PepsiCo SAP enterprise ecosystem</div>
@@ -374,10 +396,17 @@ export default function App() {
             <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-display tabular-nums">99.99%</div>
             <div className="text-xs text-slate-500 dark:text-slate-400">BTP data pipeline uptime</div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Capabilities Section */}
-        <section id="capabilities" className="space-y-6">
+        <motion.section 
+          id="capabilities" 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5 }}
+          className="space-y-6"
+        >
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
@@ -406,12 +435,12 @@ export default function App() {
             </div>
           </div>
 
-          {/* Capabilities Grid */}
+          {/* Capabilities Grid with Cursor Spotlight effects */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             
             {/* 1. SAP Functional */}
             {(activeCapabilityTab === 'all' || activeCapabilityTab === 'functional') && (
-              <article className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-xl p-6 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+              <SpotlightCard className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-xl p-6 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-normal text-slate-900 dark:text-white font-display">SAP Functional</h3>
                   <span className="text-xs font-mono text-emerald-700 dark:text-emerald-400 font-medium">SAP SD &amp; Pricing</span>
@@ -425,12 +454,12 @@ export default function App() {
                   <span className="px-2 py-0.5 rounded bg-stone-100 dark:bg-[#141822] border border-stone-200 dark:border-[#232936]">VBO1 Rebates</span>
                   <span className="px-2 py-0.5 rounded bg-stone-100 dark:bg-[#141822] border border-stone-200 dark:border-[#232936]">VF01 Billing</span>
                 </div>
-              </article>
+              </SpotlightCard>
             )}
 
             {/* 2. SAP BTP */}
             {(activeCapabilityTab === 'all' || activeCapabilityTab === 'btp') && (
-              <article className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-xl p-6 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+              <SpotlightCard className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-xl p-6 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-normal text-slate-900 dark:text-white font-display">SAP BTP</h3>
                   <span className="text-xs font-mono text-cyan-700 dark:text-cyan-400 font-medium">Cloud Platform</span>
@@ -444,12 +473,12 @@ export default function App() {
                   <span className="px-2 py-0.5 rounded bg-stone-100 dark:bg-[#141822] border border-stone-200 dark:border-[#232936]">Integration Suite</span>
                   <span className="px-2 py-0.5 rounded bg-stone-100 dark:bg-[#141822] border border-stone-200 dark:border-[#232936]">Cloud Connector</span>
                 </div>
-              </article>
+              </SpotlightCard>
             )}
 
             {/* 3. Technical */}
             {(activeCapabilityTab === 'all' || activeCapabilityTab === 'technical') && (
-              <article className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-xl p-6 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+              <SpotlightCard className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-xl p-6 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-normal text-slate-900 dark:text-white font-display">Technical</h3>
                   <span className="text-xs font-mono text-amber-700 dark:text-amber-400 font-medium">Programming &amp; APIs</span>
@@ -463,12 +492,12 @@ export default function App() {
                   <span className="px-2 py-0.5 rounded bg-stone-100 dark:bg-[#141822] border border-stone-200 dark:border-[#232936]">REST &amp; JSON</span>
                   <span className="px-2 py-0.5 rounded bg-stone-100 dark:bg-[#141822] border border-stone-200 dark:border-[#232936]">SQL / HANA DB</span>
                 </div>
-              </article>
+              </SpotlightCard>
             )}
 
             {/* 4. Ways of Working */}
             {(activeCapabilityTab === 'all' || activeCapabilityTab === 'ways') && (
-              <article className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-xl p-6 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+              <SpotlightCard className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-xl p-6 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
                 <div className="flex items-center justify-between">
                   <h3 className="text-2xl font-normal text-slate-900 dark:text-white font-display">Ways of working</h3>
                   <span className="text-xs font-mono text-purple-700 dark:text-purple-400 font-medium">Methodology &amp; Tools</span>
@@ -482,14 +511,21 @@ export default function App() {
                   <span className="px-2 py-0.5 rounded bg-stone-100 dark:bg-[#141822] border border-stone-200 dark:border-[#232936]">Sprint Planning</span>
                   <span className="px-2 py-0.5 rounded bg-stone-100 dark:bg-[#141822] border border-stone-200 dark:border-[#232936]">Go-Live Cutover</span>
                 </div>
-              </article>
+              </SpotlightCard>
             )}
 
           </div>
-        </section>
+        </motion.section>
 
         {/* Experience Section */}
-        <section id="work" className="space-y-6 pt-6">
+        <motion.section 
+          id="work" 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5 }}
+          className="space-y-6 pt-6"
+        >
           <div className="space-y-2">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
               Professional Journey
@@ -504,11 +540,11 @@ export default function App() {
             </div>
           </div>
 
-          {/* Project Timeline Cards */}
+          {/* Project Timeline Cards with Spotlight Effect */}
           <div className="space-y-4">
             
             {/* Project 1: PepsiCo Poppi */}
-            <article className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-8 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+            <SpotlightCard className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-8 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-3">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
@@ -535,10 +571,10 @@ export default function App() {
                   Ensuring seamless continuity for distributor shipments and invoice generation.
                 </div>
               </div>
-            </article>
+            </SpotlightCard>
 
             {/* Project 2: Broker Commission & Bonus Buy */}
-            <article className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-8 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+            <SpotlightCard className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-8 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <h3 className="text-2xl font-normal text-slate-900 dark:text-white font-display">Broker Commission &amp; Bonus Buy</h3>
                 <span className="text-xs font-mono px-3 py-1 rounded bg-stone-100 dark:bg-[#141822] text-slate-600 dark:text-slate-400 border border-stone-200 dark:border-[#232936]">
@@ -562,13 +598,20 @@ export default function App() {
                   Documented functional specs and standard operating procedures for PepsiCo operations.
                 </div>
               </div>
-            </article>
+            </SpotlightCard>
 
           </div>
-        </section>
+        </motion.section>
 
         {/* SAP BTP Applications Section */}
-        <section id="projects" className="space-y-6 pt-6">
+        <motion.section 
+          id="projects" 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5 }}
+          className="space-y-6 pt-6"
+        >
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
@@ -583,13 +626,13 @@ export default function App() {
             </p>
           </div>
 
-          {/* 4 Interactive App Cards */}
+          {/* 4 Interactive App Cards with Mouse Follower Spotlights */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {BTP_PROJECTS.map((proj) => (
-              <div
+              <SpotlightCard
                 key={proj.id}
                 onClick={() => setSelectedProject(proj)}
-                className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500/40 hover:-translate-y-1 transition duration-200 cursor-pointer group shadow-sm dark:shadow-lg dark:shadow-black/40"
+                className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500/50 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group shadow-sm dark:shadow-lg dark:shadow-black/40"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -614,18 +657,32 @@ export default function App() {
                   <span>SAP BTP App</span>
                   <span className="text-emerald-700 dark:text-emerald-400 font-medium">{proj.metrics[0]?.value}</span>
                 </div>
-              </div>
+              </SpotlightCard>
             ))}
           </div>
-        </section>
+        </motion.section>
 
         {/* Interactive Architecture Flow Component */}
-        <section id="architecture" className="pt-4">
+        <motion.section 
+          id="architecture" 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5 }}
+          className="pt-4"
+        >
           <BtpArchitectureVisualizer />
-        </section>
+        </motion.section>
 
-        {/* Education Section — Updated to reflect both Bachelor's Degree and Intermediate */}
-        <section id="education" className="space-y-4 pt-4">
+        {/* Education Section */}
+        <motion.section 
+          id="education" 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5 }}
+          className="space-y-4 pt-4"
+        >
           <div className="space-y-1">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
               Education
@@ -638,7 +695,7 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             
             {/* 1. Bachelor's Degree */}
-            <article className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-7 space-y-3 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+            <SpotlightCard className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-7 space-y-3 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <GraduationCap className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
@@ -654,10 +711,10 @@ export default function App() {
                   Guntur, AP, India
                 </p>
               </div>
-            </article>
+            </SpotlightCard>
 
             {/* 2. Intermediate */}
-            <article className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-7 space-y-3 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+            <SpotlightCard className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-7 space-y-3 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <BookOpen className="w-5 h-5 text-cyan-700 dark:text-cyan-400" />
@@ -673,13 +730,19 @@ export default function App() {
                   Guntur, AP, India
                 </p>
               </div>
-            </article>
+            </SpotlightCard>
 
           </div>
-        </section>
+        </motion.section>
 
         {/* Enterprise Consulting CTA Section */}
-        <section className="bg-gradient-to-br from-emerald-50/70 via-stone-50 to-white dark:from-[#0c1418] dark:via-[#0e1014] dark:to-[#0a1210] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm dark:shadow-none transition-colors">
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5 }}
+          className="bg-gradient-to-br from-emerald-50/70 via-stone-50 to-white dark:from-[#0c1418] dark:via-[#0e1014] dark:to-[#0a1210] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm dark:shadow-none transition-colors"
+        >
           <div className="space-y-2 max-w-2xl">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
               Immediate Availability
@@ -693,16 +756,16 @@ export default function App() {
           </div>
           <button
             onClick={() => setIsContactModalOpen(true)}
-            className="px-6 py-3 rounded-lg bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 text-white dark:text-slate-950 font-semibold text-xs transition flex items-center gap-2 shrink-0 shadow-sm cursor-pointer"
+            className="px-6 py-3 rounded-lg bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 text-white dark:text-slate-950 font-semibold text-xs transition-all duration-200 hover:scale-[1.03] hover:shadow-lg hover:shadow-emerald-500/25 flex items-center gap-2 shrink-0 cursor-pointer"
           >
             Start a Conversation <ArrowUpRight className="w-4 h-4" />
           </button>
-        </section>
+        </motion.section>
 
       </main>
 
       {/* Footer / Let's Talk SAP */}
-      <footer className="border-t border-stone-200 dark:border-[#1b2029] bg-stone-100/70 dark:bg-[#060708] mt-16 py-12 px-4 sm:px-6 lg:px-8 transition-colors">
+      <footer className="border-t border-stone-200 dark:border-[#1b2029] bg-stone-100/70 dark:bg-[#060708] mt-16 py-12 px-4 sm:px-6 lg:px-8 transition-colors relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div className="space-y-2">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
