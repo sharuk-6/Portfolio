@@ -1,0 +1,6 @@
+{
+  "name": "Free App Deployment Hub",
+  "description": "Comprehensive interactive guide, platform comparison, and readiness tools to deploy web apps for free.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
