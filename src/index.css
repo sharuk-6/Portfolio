@@ -48,3 +48,47 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #b8b1a5;
 }
+
+@keyframes auroraFloat {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(60px, -40px, 0) scale(1.12) rotate(15deg);
+  }
+  100% {
+    transform: translate3d(-40px, 50px, 0) scale(0.92) rotate(-10deg);
+  }
+}
+
+@keyframes auroraFloatReverse {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-70px, 45px, 0) scale(1.15) rotate(-12deg);
+  }
+  100% {
+    transform: translate3d(50px, -35px, 0) scale(0.95) rotate(8deg);
+  }
+}
+
+@keyframes driftUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes driftDown {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+

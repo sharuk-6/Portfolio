@@ -9,7 +9,8 @@ import {
   GraduationCap, 
   BookOpen, 
   Sparkles,
-  Award
+  Award,
+  Layers
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { BtpProject } from './types';
@@ -19,9 +20,13 @@ import { BtpArchitectureVisualizer } from './components/BtpArchitectureVisualize
 import { StarfieldCanvas } from './components/StarfieldCanvas';
 import { ScrollProgress } from './components/ScrollProgress';
 import { SpotlightCard } from './components/SpotlightCard';
+import { SoftAurora } from './components/SoftAurora';
+import { DriftWall } from './components/DriftWall';
+import { HoldButton } from './components/HoldButton';
 
 // Generated image assets
 const BTP_ARCHITECTURE_IMG = '/src/assets/images/sap_btp_data_architecture_1794291064645.jpg';
+
 
 const BTP_PROJECTS: BtpProject[] = [
   {
@@ -155,6 +160,7 @@ export default function App() {
   const [activeCapabilityTab, setActiveCapabilityTab] = useState<'all' | 'functional' | 'btp' | 'technical' | 'ways'>('all');
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isStarfieldActive, setIsStarfieldActive] = useState(true);
+  const [isAuroraActive, setIsAuroraActive] = useState(true);
 
   // Theme toggle state (default to dark, persisted in localStorage)
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -192,6 +198,9 @@ export default function App() {
       {/* Top Slim Scroll Progress Bar */}
       <ScrollProgress />
 
+      {/* ReactBits Soft Aurora: Organic floating light waves in the background */}
+      {isAuroraActive && <SoftAurora theme={theme} />}
+
       {/* Interactive Starlight / Data Node Particle Canvas reacting to Mouse Pointer */}
       {isStarfieldActive && <StarfieldCanvas theme={theme} />}
 
@@ -212,6 +221,10 @@ export default function App() {
           <nav className="hidden md:flex items-center gap-8 text-xs font-medium text-slate-600 dark:text-slate-300">
             <a href="#capabilities" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
               Capabilities
+            </a>
+            <a href="#tech" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0 flex items-center gap-1">
+              <span>Drift Wall</span>
+              <span className="text-[10px] font-mono px-1 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">3D</span>
             </a>
             <a href="#work" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
               Experience
@@ -243,6 +256,20 @@ export default function App() {
               <Sparkles className="w-3.5 h-3.5" />
             </button>
 
+            {/* Aurora Ambient Background Toggle */}
+            <button
+              onClick={() => setIsAuroraActive(prev => !prev)}
+              aria-label="Toggle soft aurora background"
+              title={isAuroraActive ? 'Disable soft aurora' : 'Enable soft aurora'}
+              className={`p-2 rounded-lg border transition cursor-pointer flex items-center gap-1 text-xs ${
+                isAuroraActive 
+                  ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-700 dark:text-cyan-400' 
+                  : 'bg-stone-200/50 dark:bg-slate-900 border-stone-300 dark:border-slate-800 text-slate-400'
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+            </button>
+
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -265,6 +292,7 @@ export default function App() {
           </div>
         </div>
       </header>
+
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-24 relative z-10">
@@ -307,15 +335,28 @@ export default function App() {
                 >
                   Start a conversation <ArrowUpRight className="w-4 h-4" />
                 </button>
+                
+                {/* Deliberate Hold-to-Navigate Email Confirmation */}
+                <HoldButton
+                  onHoldComplete={() => {
+                    window.location.href = 'mailto:shaiksharu10@gmail.com?subject=SAP%20Consulting%20Inquiry';
+                  }}
+                  label="Hold to Email"
+                  holdingLabel="Launching mail..."
+                  completedLabel="Mail Launched!"
+                  variant="outline"
+                  icon={<Mail className="w-3.5 h-3.5" />}
+                />
+
                 <a 
-                  href="#work"
-                  className="px-5 py-2.5 rounded-lg bg-white dark:bg-[#141822] hover:bg-stone-100 dark:hover:bg-[#1a212e] text-slate-800 dark:text-slate-200 border border-stone-200 dark:border-[#232936] font-semibold text-xs transition hover:-translate-y-0.5"
+                  href="#tech"
+                  className="px-4 py-2.5 rounded-lg bg-white dark:bg-[#141822] hover:bg-stone-100 dark:hover:bg-[#1a212e] text-slate-800 dark:text-slate-200 border border-stone-200 dark:border-[#232936] font-semibold text-xs transition hover:-translate-y-0.5"
                 >
-                  View experience
+                  Tech Drift Wall 3D
                 </a>
                 <a 
                   href="#projects"
-                  className="px-5 py-2.5 rounded-lg bg-transparent hover:bg-stone-200/50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 border border-stone-300 dark:border-slate-800 font-semibold text-xs transition hover:-translate-y-0.5"
+                  className="px-4 py-2.5 rounded-lg bg-transparent hover:bg-stone-200/50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 border border-stone-300 dark:border-slate-800 font-semibold text-xs transition hover:-translate-y-0.5"
                 >
                   View BTP apps
                 </a>
@@ -323,7 +364,7 @@ export default function App() {
             </div>
 
             {/* Bottom Contact Metadata Bar (Zero-pill discipline, clean unboxed text) */}
-            <div className="pt-6 border-t border-stone-200 dark:border-[#1b2029] flex flex-wrap items-center gap-y-3 gap-x-6 text-xs text-slate-600 dark:text-slate-400">
+            <div className="pt-6 border-t border-stone-200 dark:border-[#1b2029] flex flex-wrap items-center gap-y-3 gap-x-5 text-xs text-slate-600 dark:text-slate-400">
               <span className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" /> Guntur, AP, India
               </span>
@@ -338,8 +379,21 @@ export default function App() {
                 <span>shaiksharu10@gmail.com</span>
                 {copiedEmail && <span className="text-emerald-700 dark:text-emerald-400 text-[10px] font-semibold">(Copied)</span>}
               </button>
+              
+              {/* Hold to Confirm WhatsApp Navigation */}
+              <HoldButton
+                onHoldComplete={() => {
+                  window.open('https://wa.me/919515994533?text=Hi%20Shaik,%20I%20saw%20your%20SAP%20portfolio', '_blank', 'noopener,noreferrer');
+                }}
+                label="Hold for WhatsApp"
+                holdingLabel="Opening WhatsApp..."
+                completedLabel="Opened!"
+                variant="subtle"
+                className="py-1 px-2.5 text-[11px]"
+              />
             </div>
           </div>
+
 
           {/* Right Column: 3D Connected Enterprise Architecture Visualizer */}
           <div className="lg:col-span-5 flex flex-col justify-between bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl overflow-hidden group shadow-sm dark:shadow-none transition-colors">
@@ -603,6 +657,18 @@ export default function App() {
           </div>
         </motion.section>
 
+        {/* ReactBits 3D Drift Wall Technology Ecosystem (Python, JavaScript, CAPM, BTP, Azure, ABAP) */}
+        <motion.section 
+          id="tech" 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5 }}
+          className="pt-2"
+        >
+          <DriftWall />
+        </motion.section>
+
         {/* SAP BTP Applications Section */}
         <motion.section 
           id="projects" 
@@ -754,12 +820,24 @@ export default function App() {
               Available for SAP functional consulting (SD, Pricing, Broker Commissions, Bonus Buy), BTP application development, and enterprise process integration.
             </p>
           </div>
-          <button
-            onClick={() => setIsContactModalOpen(true)}
-            className="px-6 py-3 rounded-lg bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 text-white dark:text-slate-950 font-semibold text-xs transition-all duration-200 hover:scale-[1.03] hover:shadow-lg hover:shadow-emerald-500/25 flex items-center gap-2 shrink-0 cursor-pointer"
-          >
-            Start a Conversation <ArrowUpRight className="w-4 h-4" />
-          </button>
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={() => setIsContactModalOpen(true)}
+              className="px-6 py-3 rounded-xl bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 text-white dark:text-slate-950 font-semibold text-xs transition-all duration-200 hover:scale-[1.03] hover:shadow-lg hover:shadow-emerald-500/25 flex items-center gap-2 cursor-pointer shadow-sm"
+            >
+              Start a Conversation <ArrowUpRight className="w-4 h-4" />
+            </button>
+            <HoldButton
+              onHoldComplete={() => {
+                window.open('https://wa.me/919515994533?text=Hi%20Shaik,%20ready%20to%20discuss%20an%20SAP%20project', '_blank', 'noopener,noreferrer');
+              }}
+              label="Hold for WhatsApp"
+              holdingLabel="Opening WhatsApp..."
+              completedLabel="Opened!"
+              variant="outline"
+              className="py-3 px-5"
+            />
+          </div>
         </motion.section>
 
       </main>
@@ -767,24 +845,49 @@ export default function App() {
       {/* Footer / Let's Talk SAP */}
       <footer className="border-t border-stone-200 dark:border-[#1b2029] bg-stone-100/70 dark:bg-[#060708] mt-16 py-12 px-4 sm:px-6 lg:px-8 transition-colors relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
               Let&apos;s talk SAP
             </span>
-            <div>
-              <a 
-                href="mailto:shaiksharu10@gmail.com" 
-                className="text-3xl sm:text-4xl text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-display transition block"
+            <div className="flex flex-wrap items-center gap-3">
+              <button 
+                onClick={handleCopyEmail}
+                className="text-2xl sm:text-4xl text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-display transition text-left cursor-pointer"
+                title="Click to copy email address"
               >
                 shaiksharu10@gmail.com
-              </a>
+              </button>
+              <HoldButton
+                onHoldComplete={() => {
+                  window.location.href = 'mailto:shaiksharu10@gmail.com';
+                }}
+                label="Hold to Email"
+                holdingLabel="Launching mail client..."
+                completedLabel="Launched!"
+                variant="subtle"
+                className="py-1.5 px-3 text-xs"
+                icon={<Mail className="w-3.5 h-3.5" />}
+              />
             </div>
+            {copiedEmail && (
+              <p className="text-xs font-mono text-emerald-600 dark:text-emerald-400 animate-in fade-in">
+                Email address copied to clipboard!
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-xs font-mono text-slate-600 dark:text-slate-400">
-            <a href="tel:+919515994533" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition">
-              +91 95159 94533
-            </a>
+            <HoldButton
+              onHoldComplete={() => {
+                window.location.href = 'tel:+919515994533';
+              }}
+              label="+91 95159 94533"
+              holdingLabel="Dialing..."
+              completedLabel="Dialing!"
+              variant="outline"
+              className="py-1.5 px-3 text-xs font-mono"
+              icon={<Phone className="w-3 h-3" />}
+            />
             <span className="hidden sm:inline text-stone-300 dark:text-slate-700">&bull;</span>
             <span>Guntur, AP, India</span>
           </div>
