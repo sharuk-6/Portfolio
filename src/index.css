@@ -91,4 +91,18 @@
   }
 }
 
+.arch-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(120, 113, 108, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(120, 113, 108, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.dark .arch-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
 

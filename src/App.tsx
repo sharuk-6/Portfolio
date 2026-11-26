@@ -8,9 +8,7 @@ import {
   Moon, 
   GraduationCap, 
   BookOpen, 
-  Sparkles,
-  Award,
-  Layers
+  Menu
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { BtpProject } from './types';
@@ -23,6 +21,9 @@ import { SpotlightCard } from './components/SpotlightCard';
 import { SoftAurora } from './components/SoftAurora';
 import { DriftWall } from './components/DriftWall';
 import { SlideCommit } from './components/SlideCommit';
+import { FloatingNavDock } from './components/FloatingNavDock';
+import { AnimatedCounter } from './components/AnimatedCounter';
+import { BlurText } from './components/BlurText';
 
 // Generated image assets
 const BTP_ARCHITECTURE_IMG = '/src/assets/images/sap_btp_data_architecture_1794291064645.jpg';
@@ -33,123 +34,100 @@ const BTP_PROJECTS: BtpProject[] = [
     id: 'sales-order-extraction',
     number: '01',
     title: 'Sales Order Extraction',
-    subtitle: 'Automated data ingestion from EDI and digital channels into SAP SD',
-    description: 'Extracts and processes sales order data, reducing manual entry effort and eliminating transposition errors across beverage distribution pipelines.',
-    fullOverview: 'Developed an automated cloud microservice on SAP BTP to ingest incoming sales orders across varied partner channels. The app parses complex header and line-item datasets, maps customer specific material codes to SAP material numbers, validates pricing condition records via OData APIs, and creates or updates sales orders via standard BAPIs in the core system.',
+    subtitle: 'Automated data ingestion from digital channels into SAP SD',
+    description: 'Extracts and processes sales order data, reducing manual entry effort and helping prevent transposition errors across order pipelines.',
+    fullOverview: 'Developed an automated cloud application on SAP BTP to ingest incoming sales order data across partner channels. The app parses header and line-item datasets, maps customer material references, validates pricing rules via OData APIs, and supports sales order creation in core SAP SD.',
     architecture: [
-      'Ingestion webhook or scheduled poll on SAP BTP Integration Suite',
-      'Data normalization & business rule validation in SAP CAP (Node.js)',
-      'Secure principal propagation via SAP Cloud Connector to S/4HANA',
-      'Automated creation of Sales Order (VA01) with return confirmation status'
+      'Data ingestion & scheduled processing on SAP BTP',
+      'Normalization & business rule validation using SAP CAP (Node.js)',
+      'Secure connectivity via SAP Cloud Connector to core SAP',
+      'Automated Sales Order creation & confirmation feedback'
     ],
     businessImpact: [
-      'Eliminated ~85% of manual order re-keying for high-volume customer accounts',
-      'Cut order-to-confirmation processing latency from 4 hours to under 90 seconds',
-      'Zero pricing mismatch discrepancies during peak seasonal campaigns'
+      'Significantly reduced manual sales order re-keying effort',
+      'Improved order validation consistency before SAP posting',
+      'Streamlined handoff between external order files and SAP SD'
     ],
-    techStack: ['SAP BTP', 'Node.js', 'CAP Framework', 'OData v4', 'SAP SD (VA01/VA02)', 'Cloud Connector'],
-    samplePayload: `{
-  "SalesOrderType": "OR",
-  "SalesOrganization": "1000",
-  "DistributionChannel": "10",
-  "Division": "00",
-  "SoldToParty": "PEPSI_DIST_7882",
-  "PurchaseOrderByCustomer": "PO-2026-99120",
-  "to_Item": [
-    {
-      "Material": "POPPI_BEV_CAN_12OZ",
-      "RequestedQuantity": "1200",
-      "RequestedQuantityUnit": "CS"
-    }
-  ]
-}`,
+    techStack: ['SAP BTP', 'Node.js', 'CAP Framework', 'OData', 'SAP SD', 'Cloud Connector'],
     metrics: [
-      { label: 'Manual Effort Reduced', value: '~85%' },
-      { label: 'Processing Time', value: '< 90 sec' },
-      { label: 'Order Accuracy', value: '99.9%' }
+      { label: 'Scope', value: 'SAP SD' },
+      { label: 'Delivery', value: 'End-to-End' },
+      { label: 'Focus', value: 'Order Automation' }
     ]
   },
   {
     id: 'claims-extraction',
     number: '02',
     title: 'Claims Extraction & Creation',
-    subtitle: 'End-to-end broker rebate & promotional claim reconciliation in SAP',
-    description: 'Automates claims data extraction and claim creation in SAP, validating distributor proof of performance and settlement calculations.',
-    fullOverview: 'Built to streamline PepsiCo broker deductions and claims management. The application extracts promotional claim files submitted by distributors, parses rebate condition agreements, verifies against active Bonus Buy promotion matrices, and initiates claim credit memos directly in SAP SD/FICO.',
+    subtitle: 'End-to-end promotional claim extraction & creation in SAP',
+    description: 'Automates claims data extraction and claim creation in SAP, validating distributor documentation and settlement calculations.',
+    fullOverview: 'Built to streamline broker deductions and promotional claims management. The application extracts incoming claim files, parses promotion references against active agreements and Bonus Buy setups, and initiates claim creation workflows directly in SAP.',
     architecture: [
-      'Secure document upload & payload parsing microservice on SAP BTP',
-      'Automated lookup of active Rebate Agreements (VBO1/VBO2) & Broker Contracts',
-      'Discrepancy engine alerting analysts when claimed volume exceeds shipped threshold',
-      'Direct creation of debit/credit memo requests with audit trails'
+      'Document & payload extraction service hosted on SAP BTP',
+      'Validation against active rebate & broker commission agreements',
+      'Exception flagging when submitted figures require analyst review',
+      'Automated claim creation with traceable audit logs'
     ],
     businessImpact: [
-      'Automated resolution of standard promotional claims without manual intervention',
-      'Reduced claim backlog aging from 21 days down to under 48 hours',
-      'Protected revenue by preventing unauthorized deductions and duplicate filings'
+      'Automated repetitive claim extraction and entry steps',
+      'Faster turnaround on standard promotional claim processing',
+      'Clearer validation visibility for commercial finance teams'
     ],
-    techStack: ['SAP BTP', 'SAP SD Claims', 'Rebate Agreements (VBO1)', 'REST APIs', 'SAP Fiori UI5'],
-    samplePayload: `{
-  "ClaimID": "CLM-PEP-44810",
-  "BrokerID": "BRK_CENTRAL_04",
-  "PromotionReference": "BONUS_BUY_Q1_2026",
-  "ClaimedAmount": "42850.00",
-  "Currency": "USD",
-  "ValidationStatus": "MATCHED_AND_POSTED"
-}`,
+    techStack: ['SAP BTP', 'SAP SD Claims', 'Rebate Agreements', 'REST APIs', 'SAP Fiori UI5'],
     metrics: [
-      { label: 'Claim Turnaround', value: '48 Hours' },
-      { label: 'Deduction Accuracy', value: '100%' },
-      { label: 'Broker Settlement', value: '4x Faster' }
+      { label: 'Scope', value: 'Claims & Rebates' },
+      { label: 'Delivery', value: 'End-to-End' },
+      { label: 'Focus', value: 'Validation' }
     ]
   },
   {
     id: 'transactions',
     number: '03',
     title: 'Transactions Hub',
-    subtitle: 'Unified Fiori dashboard for commercial finance & operational teams',
+    subtitle: 'Unified Fiori dashboard for commercial & operational teams',
     description: 'Gives business users one unified place to view, monitor, and manage transactions across commissions, orders, and settlement status.',
-    fullOverview: 'Enterprise commercial users required a unified command center rather than jumping across disparate SAP GUI transaction screens. Designed and developed a responsive SAP Fiori application with custom filter bars, analytical card views, and real-time drilldowns into order lifecycles and broker payout schedules.',
+    fullOverview: 'Designed and developed a unified SAP Fiori workspace so commercial teams could monitor order lifecycles, broker commissions, and claim statuses from a single browser view instead of navigating multiple separate screens.',
     architecture: [
-      'Responsive SAPUI5 / Fiori Elements frontend following SAP Fiori design standards',
-      'OData v4 service layer aggregating data across Sales Orders, Billings, and Rebates',
-      'Role-based authorization (RBAC) ensuring commercial analysts only access assigned regions',
-      'Exportable reporting sheets and instant status search'
+      'Responsive SAPUI5 / Fiori frontend aligned with SAP Fiori guidelines',
+      'OData service layer aggregating Sales Orders, Billing, and Rebate views',
+      'Role-based access controls scoped by business region',
+      'Searchable transaction tracking and export support'
     ],
     businessImpact: [
-      'Unified 5 separate legacy SAP GUI transaction codes into one browser dashboard',
-      'Saved commercial teams an estimated 6 hours per week in reconciliation lookups',
-      'Zero end-user training overhead due to intuitive Fiori UX patterns'
+      'Consolidated scattered transaction lookups into one unified screen',
+      'Simplified day-to-day operational monitoring for business analysts',
+      'Intuitive Fiori experience requiring minimal user onboarding'
     ],
-    techStack: ['SAP Fiori / SAPUI5', 'OData v4', 'CDS Views', 'SAP BTP Launchpad', 'ABAP Core Data Services'],
+    techStack: ['SAP Fiori / SAPUI5', 'OData', 'CDS Views', 'SAP BTP', 'ABAP'],
     metrics: [
-      { label: 'T-Codes Consolidated', value: '5 GUI Codes' },
-      { label: 'User Time Saved', value: '6 hrs/week' },
-      { label: 'Adoption Rate', value: '100%' }
+      { label: 'Interface', value: 'SAP Fiori' },
+      { label: 'Delivery', value: 'End-to-End' },
+      { label: 'Focus', value: 'Unified UX' }
     ]
   },
   {
     id: 'data-pipeline',
     number: '04',
     title: 'Data Pipeline Engine',
-    subtitle: 'High-throughput data transformation & sync engine across enterprise systems',
-    description: 'Moves and transforms data between on-premise SAP S/4HANA instances, BTP cloud microservices, and external distributor endpoints.',
-    fullOverview: 'Architected robust scheduled and event-driven data integration flows on SAP BTP. Handles structured transformations, delta changes, schema validation, and retry mechanisms for mission-critical PepsiCo master data, inventory sync, and pricing conditions.',
+    subtitle: 'Structured data transformation & sync across enterprise systems',
+    description: 'Moves and transforms data between SAP instances, BTP cloud services, and connected enterprise endpoints.',
+    fullOverview: 'Implemented scheduled and event-driven integration pipelines on SAP BTP to handle data mapping, schema validation, and reliable synchronization between core SAP systems and supporting cloud applications.',
     architecture: [
-      'SAP BTP Integration Suite iFlows configured with secure SSL endpoints',
-      'Message transformation using Groovy script and XML/JSON mapping',
-      'Dead-letter queues and automated failure alerts via ServiceNow API',
-      'End-to-end monitoring and auditable execution logging in BTP Cockpit'
+      'SAP BTP Integration Suite flows with authenticated endpoints',
+      'Payload mapping and structured XML/JSON transformations',
+      'Error handling and alert notifications for operational triage',
+      'Execution logging and monitoring across pipeline runs'
     ],
     businessImpact: [
-      'Processed hundreds of thousands of daily message records with 99.99% pipeline reliability',
-      'Automated error handling reduced operational support tickets by over 60%',
-      'Seamless data synchronization between legacy PepsiCo and newly onboarded Poppi instances'
+      'Consistent data synchronization between core SAP and BTP apps',
+      'Structured exception logging for faster ServiceNow triage',
+      'Reliable pipeline foundation supporting ongoing enhancements'
     ],
-    techStack: ['SAP BTP Integration Suite', 'Cloud Integration (CPI)', 'Groovy Scripting', 'ServiceNow API', 'Message Queues'],
+    techStack: ['SAP BTP Integration Suite', 'Cloud Integration', 'JavaScript / Groovy', 'OData', 'ServiceNow'],
     metrics: [
-      { label: 'Daily Records', value: '100K+' },
-      { label: 'Pipeline Uptime', value: '99.99%' },
-      { label: 'Ticket Reduction', value: '60%' }
+      { label: 'Layer', value: 'Integration' },
+      { label: 'Delivery', value: 'End-to-End' },
+      { label: 'Focus', value: 'Data Sync' }
     ]
   }
 ];
@@ -161,6 +139,8 @@ export default function App() {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isStarfieldActive, setIsStarfieldActive] = useState(true);
   const [isAuroraActive, setIsAuroraActive] = useState(true);
+  const [activeSection, setActiveSection] = useState<string>('hero');
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
   // Theme toggle state (default to dark, persisted in localStorage)
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -181,6 +161,34 @@ export default function App() {
     }
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  // Active section scroll spy for Floating Glass Navigation Dock & Header links
+  useEffect(() => {
+    const sectionIds = ['hero', 'capabilities', 'work', 'tech', 'projects', 'architecture', 'education'];
+    const handleScrollSpy = () => {
+      const scrollY = window.scrollY;
+      if (scrollY < 160) {
+        setActiveSection('hero');
+        return;
+      }
+
+      const viewportMid = window.innerHeight * 0.35;
+      let current = 'hero';
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= viewportMid) {
+          current = id;
+        }
+      }
+      setActiveSection(current);
+    };
+
+    handleScrollSpy();
+    window.addEventListener('scroll', handleScrollSpy, { passive: true });
+    return () => window.removeEventListener('scroll', handleScrollSpy);
+  }, []);
 
   const toggleTheme = () => {
     setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
@@ -204,72 +212,36 @@ export default function App() {
       {/* Interactive Starlight / Data Node Particle Canvas reacting to Mouse Pointer */}
       {isStarfieldActive && <StarfieldCanvas theme={theme} />}
 
-      {/* Top Navigation Bar: One row, three zones */}
+      {/* Top Navigation Bar: Paired with Floating Glass Dock */}
       <header className="sticky top-0 z-40 bg-[#faf8f5]/85 dark:bg-[#08090a]/85 backdrop-blur-md border-b border-stone-200 dark:border-[#1b2029] transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
           
           {/* Zone 1: Single text element wordmark */}
-          <div className="flex items-center gap-2 shrink-0">
-            <a href="/" className="text-base sm:text-lg font-semibold tracking-tight text-slate-900 dark:text-white hover:text-emerald-700 dark:hover:text-emerald-300 transition whitespace-nowrap">
-              Shaik Sharuk
-            </a>
-            <span className="text-stone-400 dark:text-slate-600 font-mono text-xs hidden sm:inline">/</span>
-            <span className="text-stone-500 dark:text-slate-400 font-mono text-xs hidden sm:inline">SAP Consultant</span>
-          </div>
+          <a href="/" className="text-base sm:text-lg font-semibold tracking-tight text-slate-900 dark:text-white hover:text-emerald-700 dark:hover:text-emerald-300 transition whitespace-nowrap shrink-0">
+            Shaik Sharuk
+          </a>
 
-          {/* Zone 2: Concise single-line text navigation links */}
-          <nav className="hidden md:flex items-center gap-8 text-xs font-medium text-slate-600 dark:text-slate-300">
-            <a href="#capabilities" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
+          {/* Zone 2: Concise single-line text navigation links (paired with active scroll spy) */}
+          <nav className="hidden md:flex items-center gap-7 text-xs font-medium text-slate-600 dark:text-slate-300">
+            <a href="#capabilities" className={`transition-colors whitespace-nowrap shrink-0 ${activeSection === 'capabilities' ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'hover:text-emerald-700 dark:hover:text-emerald-400'}`}>
               Capabilities
             </a>
-            <a href="#tech" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0 flex items-center gap-1">
-              <span>Drift Wall</span>
-              <span className="text-[10px] font-mono px-1 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">3D</span>
-            </a>
-            <a href="#work" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
+            <a href="#work" className={`transition-colors whitespace-nowrap shrink-0 ${activeSection === 'work' ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'hover:text-emerald-700 dark:hover:text-emerald-400'}`}>
               Experience
             </a>
-            <a href="#projects" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
+            <a href="#tech" className={`transition-colors whitespace-nowrap shrink-0 ${activeSection === 'tech' ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'hover:text-emerald-700 dark:hover:text-emerald-400'}`}>
+              Drift Wall
+            </a>
+            <a href="#projects" className={`transition-colors whitespace-nowrap shrink-0 ${activeSection === 'projects' ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'hover:text-emerald-700 dark:hover:text-emerald-400'}`}>
               BTP Apps
             </a>
-            <a href="#architecture" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
+            <a href="#architecture" className={`transition-colors whitespace-nowrap shrink-0 ${activeSection === 'architecture' ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'hover:text-emerald-700 dark:hover:text-emerald-400'}`}>
               Architecture
-            </a>
-            <a href="#education" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap shrink-0">
-              Education
             </a>
           </nav>
 
-          {/* Zone 3: Interactive particle toggle, Theme switch, and Primary Action */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            {/* Interactive Stars/Particles Toggle */}
-            <button
-              onClick={() => setIsStarfieldActive(prev => !prev)}
-              aria-label="Toggle starlight interactive particles"
-              title={isStarfieldActive ? 'Disable cursor particle stars' : 'Enable cursor particle stars'}
-              className={`p-2 rounded-lg border transition cursor-pointer flex items-center gap-1 text-xs ${
-                isStarfieldActive 
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400' 
-                  : 'bg-stone-200/50 dark:bg-slate-900 border-stone-300 dark:border-slate-800 text-slate-400'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-            </button>
-
-            {/* Aurora Ambient Background Toggle */}
-            <button
-              onClick={() => setIsAuroraActive(prev => !prev)}
-              aria-label="Toggle soft aurora background"
-              title={isAuroraActive ? 'Disable soft aurora' : 'Enable soft aurora'}
-              className={`p-2 rounded-lg border transition cursor-pointer flex items-center gap-1 text-xs ${
-                isAuroraActive 
-                  ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-700 dark:text-cyan-400' 
-                  : 'bg-stone-200/50 dark:bg-slate-900 border-stone-300 dark:border-slate-800 text-slate-400'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-            </button>
-
+          {/* Zone 3: Theme/Effects + Mobile Slide-Out Trigger & Primary Action */}
+          <div className="flex items-center gap-2 shrink-0">
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -285,9 +257,18 @@ export default function App() {
 
             <button 
               onClick={() => setIsContactModalOpen(true)}
-              className="px-4 py-2 text-xs font-semibold text-white dark:text-slate-950 bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 rounded-lg transition-all duration-200 hover:scale-[1.02] whitespace-nowrap shrink-0 shadow-sm cursor-pointer"
+              className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold text-white dark:text-slate-950 bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 rounded-lg transition-all duration-200 hover:scale-[1.02] whitespace-nowrap shrink-0 shadow-sm cursor-pointer"
             >
               Start a Conversation
+            </button>
+
+            {/* Mobile Slide-Out Drawer Trigger */}
+            <button
+              onClick={() => setIsMobileDrawerOpen(true)}
+              aria-label="Open navigation menu"
+              className="md:hidden p-2 rounded-lg bg-stone-200/70 dark:bg-[#141822] text-slate-700 dark:text-slate-200 border border-stone-300 dark:border-[#232936] cursor-pointer"
+            >
+              <Menu className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -299,10 +280,11 @@ export default function App() {
         
         {/* Hero Split Section */}
         <motion.section 
+          id="hero"
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pt-2"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pt-2 scroll-mt-24"
         >
           {/* Left Column: Typographic Hierarchy & Core Pitch */}
           <div className="lg:col-span-7 flex flex-col justify-between space-y-8">
@@ -317,10 +299,12 @@ export default function App() {
                 <span>SAP SD</span>
               </div>
 
-              {/* Main Headline: Editorial Display Serif */}
-              <h1 className="text-4xl sm:text-6xl font-normal tracking-tight text-slate-900 dark:text-white font-display leading-[1.08] text-balance">
-                Business process clarity, built into SAP.
-              </h1>
+              {/* Main Headline: Word-by-Word Blur Reveal in Editorial Display Serif */}
+              <BlurText
+                text="Business process clarity, built into SAP."
+                as="h1"
+                className="text-4xl sm:text-6xl font-normal tracking-tight text-slate-900 dark:text-white font-display leading-[1.08] text-balance"
+              />
 
               {/* Subheadline / Lead Copy */}
               <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-sans max-w-2xl font-light">
@@ -426,29 +410,98 @@ export default function App() {
           </div>
         </motion.section>
 
-        {/* Quantified Business Impact Strip (Full-width row below hero split) */}
+        {/* Editorial Asymmetrical Bento Overview Grid (Grounded Facts + Architectural Gridlines) */}
         <motion.section 
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5 }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4 py-6 border-y border-stone-200 dark:border-[#1b2029]"
+          aria-label="Portfolio overview"
+          className="grid grid-cols-1 md:grid-cols-12 gap-4"
         >
-          <div className="space-y-1">
-            <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-display tabular-nums">Nearly 3 Yrs</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">PepsiCo SAP enterprise ecosystem</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-2xl sm:text-3xl font-bold text-emerald-700 dark:text-emerald-400 font-display tabular-nums">4 BTP Apps</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">Shipped end-to-end to production</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-2xl sm:text-3xl font-bold text-cyan-700 dark:text-cyan-300 font-display tabular-nums">~85% Less</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">Manual sales order &amp; claims effort</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white font-display tabular-nums">99.99%</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">BTP data pipeline uptime</div>
+          {/* Large Anchor Bento Tile: Career Overview */}
+          <SpotlightCard className="md:col-span-5 bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-7 arch-grid-bg flex flex-col justify-between gap-6">
+            <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+              <span>Experience Overview</span>
+              <span>PepsiCo SAP Landscape</span>
+            </div>
+            <div className="space-y-1.5">
+              <div className="text-4xl sm:text-5xl font-bold text-emerald-700 dark:text-emerald-400 font-display tracking-tight">
+                ~<AnimatedCounter value={3} suffix=" Years" />
+              </div>
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-sm">
+                Pairing SAP SD functional consulting (commissions, Bonus Buy, sales &amp; claims) with custom SAP BTP development and integration.
+              </p>
+            </div>
+            <div className="pt-4 border-t border-stone-200/80 dark:border-[#1f2533] grid grid-cols-2 gap-4 text-xs">
+              <div>
+                <div className="font-mono text-slate-500 dark:text-slate-400">Organization</div>
+                <div className="font-semibold text-slate-900 dark:text-white mt-0.5">
+                  Pivox Labs &middot; PepsiCo
+                </div>
+              </div>
+              <div>
+                <div className="font-mono text-slate-500 dark:text-slate-400">Timeline</div>
+                <div className="font-semibold text-slate-900 dark:text-white font-mono mt-0.5">
+                  Dec 2023 – Present
+                </div>
+              </div>
+            </div>
+          </SpotlightCard>
+
+          {/* Right Asymmetrical Bento Cluster */}
+          <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <SpotlightCard className="col-span-2 sm:col-span-2 bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 flex flex-col justify-between gap-4">
+              <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                <span>SAP BTP Delivery</span>
+                <span>Build &middot; Test &middot; Handover</span>
+              </div>
+              <div className="flex items-baseline justify-between gap-4 flex-wrap">
+                <div className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white font-display">
+                  <AnimatedCounter value={1.5} decimals={1} suffix=" Yrs" />
+                </div>
+                <div className="text-xs font-mono text-cyan-700 dark:text-cyan-300">
+                  Side-by-side BTP automation
+                </div>
+              </div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                Delivered custom SAP BTP apps for order extraction, claims creation, transaction tracking, and system data pipelines.
+              </div>
+            </SpotlightCard>
+
+            <SpotlightCard className="col-span-1 bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 flex flex-col justify-between arch-grid-bg">
+              <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">BTP Apps</span>
+              <div className="space-y-1">
+                <div className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white font-display">
+                  <AnimatedCounter value={4} />
+                </div>
+                <div className="text-xs text-slate-600 dark:text-slate-400">Applications delivered</div>
+              </div>
+            </SpotlightCard>
+
+            <SpotlightCard className="col-span-1 bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 flex flex-col justify-between">
+              <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">Engagements</span>
+              <div className="space-y-1">
+                <div className="text-3xl sm:text-4xl font-bold text-emerald-700 dark:text-emerald-400 font-display">
+                  <AnimatedCounter value={2} />
+                </div>
+                <div className="text-xs text-slate-600 dark:text-slate-400">Core PepsiCo programs</div>
+              </div>
+            </SpotlightCard>
+
+            <SpotlightCard className="col-span-2 bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 flex flex-col justify-between gap-3">
+              <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                <span>Core Focus</span>
+                <span>Functional + Technical</span>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm font-medium text-slate-900 dark:text-slate-100">
+                <span>SAP SD &amp; Pricing</span>
+                <span className="text-stone-400 dark:text-slate-600">&middot;</span>
+                <span>CAPM &amp; Fiori</span>
+                <span className="text-stone-400 dark:text-slate-600">&middot;</span>
+                <span>Integration Suite</span>
+              </div>
+            </SpotlightCard>
           </div>
         </motion.section>
 
@@ -459,7 +512,7 @@ export default function App() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5 }}
-          className="space-y-6"
+          className="space-y-6 scroll-mt-24"
         >
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
@@ -471,21 +524,33 @@ export default function App() {
               </h2>
             </div>
             
-            {/* Interactive Filter Tabs */}
+            {/* Interactive Filter Tabs with Spring Indicator */}
             <div className="flex items-center gap-1 p-1 bg-stone-200/60 dark:bg-[#12151c] rounded-lg border border-stone-200 dark:border-[#232936] overflow-x-auto">
-              {(['all', 'functional', 'btp', 'technical', 'ways'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveCapabilityTab(tab)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap capitalize cursor-pointer ${
-                    activeCapabilityTab === tab
-                      ? 'bg-white dark:bg-[#1e2533] text-emerald-700 dark:text-emerald-300 shadow-xs'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  {tab === 'all' ? 'All Areas' : tab === 'functional' ? 'SAP Functional' : tab === 'btp' ? 'SAP BTP' : tab === 'technical' ? 'Technical' : 'Ways of Working'}
-                </button>
-              ))}
+              {(['all', 'functional', 'btp', 'technical', 'ways'] as const).map((tab) => {
+                const isSelected = activeCapabilityTab === tab;
+                return (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveCapabilityTab(tab)}
+                    className={`relative px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap capitalize cursor-pointer ${
+                      isSelected
+                        ? 'text-emerald-700 dark:text-emerald-300'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    }`}
+                  >
+                    {isSelected && (
+                      <motion.span
+                        layoutId="capabilitiesActiveTab"
+                        transition={{ type: 'spring', stiffness: 450, damping: 34 }}
+                        className="absolute inset-0 rounded-md bg-white dark:bg-[#1e2533] shadow-xs"
+                      />
+                    )}
+                    <span className="relative z-10">
+                      {tab === 'all' ? 'All Areas' : tab === 'functional' ? 'SAP Functional' : tab === 'btp' ? 'SAP BTP' : tab === 'technical' ? 'Technical' : 'Ways of Working'}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -571,14 +636,14 @@ export default function App() {
           </div>
         </motion.section>
 
-        {/* Experience Section */}
+        {/* Experience Section: Editorial Asymmetrical Bento Layout */}
         <motion.section 
           id="work" 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5 }}
-          className="space-y-6 pt-6"
+          className="space-y-6 pt-6 scroll-mt-24"
         >
           <div className="space-y-2">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
@@ -594,64 +659,134 @@ export default function App() {
             </div>
           </div>
 
-          {/* Project Timeline Cards with Spotlight Effect */}
-          <div className="space-y-4">
+          {/* Asymmetrical Bento Grid with Architectural Hairline Dividers */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             
-            {/* Project 1: PepsiCo Poppi */}
-            <SpotlightCard className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-8 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-3">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
-                  <h3 className="text-2xl font-normal text-slate-900 dark:text-white font-display">PepsiCo Poppi</h3>
+            {/* Bento Tile 1 (Wide Flagship): PepsiCo Poppi Acquisition Integration */}
+            <SpotlightCard className="lg:col-span-7 bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-8 flex flex-col justify-between gap-6 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <span className="text-emerald-700 dark:text-emerald-400 font-semibold">01. Active Engagement</span>
+                  <span>Apr 2025 – Present</span>
                 </div>
-                <span className="text-xs font-mono px-3 py-1 rounded bg-stone-100 dark:bg-[#141822] text-emerald-700 dark:text-emerald-300 border border-stone-200 dark:border-[#232936]">
-                  Apr 2025 – Present
-                </span>
+                <h3 className="text-2xl sm:text-3xl font-normal text-slate-900 dark:text-white font-display">
+                  PepsiCo Poppi
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
+                  Supporting and enhancing SAP SD processes after acquisition, onboarding Poppi into PepsiCo enterprise workflows and leading end-to-end requirements, UAT validation, and go-live cutover support.
+                </p>
               </div>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
-                Supporting and enhancing SAP processes after the acquisition, helping onboard Poppi into PepsiCo SAP processes and coordinating requirements, testing and go-live support.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs text-slate-600 dark:text-slate-400">
-                <div className="p-3 bg-stone-50 dark:bg-[#12151c] rounded-lg border border-stone-200 dark:border-[#1e2430]">
-                  <strong className="text-slate-800 dark:text-slate-200 block mb-0.5">Process Harmonization</strong>
+
+              {/* Architectural Hairline Sub-Grid (no nested rounded card boxes) */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 pt-5 border-t border-stone-200 dark:border-[#1f2533] divide-y sm:divide-y-0 sm:divide-x divide-stone-200 dark:divide-[#1f2533]">
+                <div className="pb-3 sm:pb-0 sm:pr-4 text-xs text-slate-600 dark:text-slate-400">
+                  <strong className="text-slate-900 dark:text-slate-100 block mb-1 font-medium">Process Harmonization</strong>
                   Aligning beverage distribution with PepsiCo standard SD order &amp; billing cycles.
                 </div>
-                <div className="p-3 bg-stone-50 dark:bg-[#12151c] rounded-lg border border-stone-200 dark:border-[#1e2430]">
-                  <strong className="text-slate-800 dark:text-slate-200 block mb-0.5">UAT &amp; Stakeholder Alignment</strong>
-                  Drafting test scripts, validating scenarios with business users, and managing defect lifecycles.
+                <div className="py-3 sm:py-0 sm:px-4 text-xs text-slate-600 dark:text-slate-400">
+                  <strong className="text-slate-900 dark:text-slate-100 block mb-1 font-medium">UAT &amp; Alignment</strong>
+                  Drafting test scripts, validating business scenarios, and managing defect resolution.
                 </div>
-                <div className="p-3 bg-stone-50 dark:bg-[#12151c] rounded-lg border border-stone-200 dark:border-[#1e2430]">
-                  <strong className="text-slate-800 dark:text-slate-200 block mb-0.5">Go-Live Cutover</strong>
-                  Ensuring seamless continuity for distributor shipments and invoice generation.
+                <div className="pt-3 sm:pt-0 sm:pl-4 text-xs text-slate-600 dark:text-slate-400">
+                  <strong className="text-slate-900 dark:text-slate-100 block mb-1 font-medium">Go-Live Cutover</strong>
+                  Ensuring continuity for distributor shipments and automated invoice generation.
                 </div>
               </div>
             </SpotlightCard>
 
-            {/* Project 2: Broker Commission & Bonus Buy */}
-            <SpotlightCard className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-8 space-y-4 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <h3 className="text-2xl font-normal text-slate-900 dark:text-white font-display">Broker Commission &amp; Bonus Buy</h3>
-                <span className="text-xs font-mono px-3 py-1 rounded bg-stone-100 dark:bg-[#141822] text-slate-600 dark:text-slate-400 border border-stone-200 dark:border-[#232936]">
-                  Dec 2023 – Mar 2025
-                </span>
+            {/* Bento Tile 2 (Asymmetrical Architectural Anchor): Role Overview */}
+            <SpotlightCard className="lg:col-span-5 bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-8 arch-grid-bg flex flex-col justify-between gap-6 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+              <div className="space-y-2">
+                <div className="text-xs font-mono text-cyan-700 dark:text-cyan-400 font-semibold">
+                  Role Snapshot
+                </div>
+                <h3 className="text-xl font-normal text-slate-900 dark:text-white font-display">
+                  Functional &amp; BTP Responsibilities
+                </h3>
               </div>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
-                Supported configuration, enhancements, testing and issue resolution, carried business requirements through implementation and validation, and documented solutions for knowledge transfer.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs text-slate-600 dark:text-slate-400">
-                <div className="p-3 bg-stone-50 dark:bg-[#12151c] rounded-lg border border-stone-200 dark:border-[#1e2430]">
-                  <strong className="text-slate-800 dark:text-slate-200 block mb-0.5">Condition Technique</strong>
+
+              <dl className="divide-y divide-stone-200/80 dark:divide-[#1f2533] text-xs">
+                <div className="py-2.5 flex items-center justify-between gap-3">
+                  <dt className="text-slate-500 dark:text-slate-400">SAP Functional</dt>
+                  <dd className="font-medium text-slate-900 dark:text-slate-100 text-right">SD, Pricing, Commissions, Bonus Buy</dd>
+                </div>
+                <div className="py-2.5 flex items-center justify-between gap-3">
+                  <dt className="text-slate-500 dark:text-slate-400">Cloud Automation</dt>
+                  <dd className="font-medium text-slate-900 dark:text-slate-100 text-right">BTP Apps, CAPM, Integration Suite</dd>
+                </div>
+                <div className="py-2.5 flex items-center justify-between gap-3">
+                  <dt className="text-slate-500 dark:text-slate-400">Delivery Lifecycle</dt>
+                  <dd className="font-medium text-slate-900 dark:text-slate-100 text-right">Requirements, UAT &amp; Go-Live</dd>
+                </div>
+                <div className="py-2.5 flex items-center justify-between gap-3">
+                  <dt className="text-slate-500 dark:text-slate-400">Handover</dt>
+                  <dd className="font-medium text-slate-900 dark:text-slate-100 text-right">Documentation &amp; Knowledge Transfer</dd>
+                </div>
+              </dl>
+
+              <div className="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400 pt-1">
+                <span>Pivox Labs &middot; Client: PepsiCo</span>
+                <span>Guntur, AP</span>
+              </div>
+            </SpotlightCard>
+
+            {/* Bento Tile 3 (Wide Secondary): Broker Commission & Bonus Buy */}
+            <SpotlightCard className="lg:col-span-8 bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-8 flex flex-col justify-between gap-6 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <span>02. Core Commercial SAP SD</span>
+                  <span>Dec 2023 – Mar 2025</span>
+                </div>
+                <h3 className="text-2xl font-normal text-slate-900 dark:text-white font-display">
+                  Broker Commission &amp; Bonus Buy
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
+                  Supported configuration, enhancements, testing and root-cause resolution across PepsiCo commercial promotions, translating business requirements into validated pricing and rebate mechanics.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 pt-5 border-t border-stone-200 dark:border-[#1f2533] divide-y sm:divide-y-0 sm:divide-x divide-stone-200 dark:divide-[#1f2533]">
+                <div className="pb-3 sm:pb-0 sm:pr-4 text-xs text-slate-600 dark:text-slate-400">
+                  <strong className="text-slate-900 dark:text-slate-100 block mb-1 font-medium">Condition Technique</strong>
                   Configured pricing condition types, access sequences, and rebate settlement routines.
                 </div>
-                <div className="p-3 bg-stone-50 dark:bg-[#12151c] rounded-lg border border-stone-200 dark:border-[#1e2430]">
-                  <strong className="text-slate-800 dark:text-slate-200 block mb-0.5">Issue Resolution</strong>
+                <div className="py-3 sm:py-0 sm:px-4 text-xs text-slate-600 dark:text-slate-400">
+                  <strong className="text-slate-900 dark:text-slate-100 block mb-1 font-medium">Issue Resolution</strong>
                   Triaged critical incident tickets via ServiceNow, diagnosing root causes in sales cycles.
                 </div>
-                <div className="p-3 bg-stone-50 dark:bg-[#12151c] rounded-lg border border-stone-200 dark:border-[#1e2430]">
-                  <strong className="text-slate-800 dark:text-slate-200 block mb-0.5">Knowledge Transfer</strong>
+                <div className="pt-3 sm:pt-0 sm:pl-4 text-xs text-slate-600 dark:text-slate-400">
+                  <strong className="text-slate-900 dark:text-slate-100 block mb-1 font-medium">Knowledge Transfer</strong>
                   Documented functional specs and standard operating procedures for PepsiCo operations.
                 </div>
               </div>
+            </SpotlightCard>
+
+            {/* Bento Tile 4 (Architectural Index Tile): Governance & Tooling */}
+            <SpotlightCard className="lg:col-span-4 bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl p-6 sm:p-8 flex flex-col justify-between gap-5 hover:border-emerald-500/40 transition shadow-xs dark:shadow-none">
+              <div className="space-y-1">
+                <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">Delivery Stack</span>
+                <h3 className="text-xl font-normal text-slate-900 dark:text-white font-display">
+                  Enterprise Lifecycle &amp; Controls
+                </h3>
+              </div>
+              <dl className="divide-y divide-stone-200 dark:divide-[#1f2533] text-xs">
+                <div className="py-2.5 flex items-center justify-between gap-2">
+                  <dt className="text-slate-500 dark:text-slate-400">Change Management</dt>
+                  <dd className="font-mono text-slate-900 dark:text-slate-200">SolMan ChRM</dd>
+                </div>
+                <div className="py-2.5 flex items-center justify-between gap-2">
+                  <dt className="text-slate-500 dark:text-slate-400">Incident Triage</dt>
+                  <dd className="font-mono text-slate-900 dark:text-slate-200">ServiceNow ITSM</dd>
+                </div>
+                <div className="py-2.5 flex items-center justify-between gap-2">
+                  <dt className="text-slate-500 dark:text-slate-400">Core Transactions</dt>
+                  <dd className="font-mono text-slate-900 dark:text-slate-200">VA01 &middot; VK11 &middot; VBO1</dd>
+                </div>
+                <div className="pt-2.5 flex items-center justify-between gap-2">
+                  <dt className="text-slate-500 dark:text-slate-400">Cloud Bridge</dt>
+                  <dd className="font-mono text-emerald-700 dark:text-emerald-400">CAP &middot; BTP Cockpit</dd>
+                </div>
+              </dl>
             </SpotlightCard>
 
           </div>
@@ -664,7 +799,7 @@ export default function App() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5 }}
-          className="pt-2"
+          className="pt-2 scroll-mt-24"
         >
           <DriftWall />
         </motion.section>
@@ -676,7 +811,7 @@ export default function App() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5 }}
-          className="space-y-6 pt-6"
+          className="space-y-6 pt-6 scroll-mt-24"
         >
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
@@ -735,7 +870,7 @@ export default function App() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5 }}
-          className="pt-4"
+          className="pt-4 scroll-mt-24"
         >
           <BtpArchitectureVisualizer />
         </motion.section>
@@ -747,7 +882,7 @@ export default function App() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5 }}
-          className="space-y-4 pt-4"
+          className="space-y-4 pt-4 scroll-mt-24"
         >
           <div className="space-y-1">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
@@ -843,7 +978,7 @@ export default function App() {
       </main>
 
       {/* Footer / Let's Talk SAP */}
-      <footer className="border-t border-stone-200 dark:border-[#1b2029] bg-stone-100/70 dark:bg-[#060708] mt-16 py-12 px-4 sm:px-6 lg:px-8 transition-colors relative z-10">
+      <footer className="border-t border-stone-200 dark:border-[#1b2029] bg-stone-100/70 dark:bg-[#060708] mt-16 pt-12 pb-24 md:pb-28 px-4 sm:px-6 lg:px-8 transition-colors relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div className="space-y-3">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
@@ -898,6 +1033,20 @@ export default function App() {
           <div>SAP Functional Consultant &bull; SAP BTP Developer</div>
         </div>
       </footer>
+
+      {/* Floating Glass macOS-Style Navigation Dock & Mobile Slide-Out Drawer */}
+      <FloatingNavDock
+        activeSection={activeSection}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        isStarfieldActive={isStarfieldActive}
+        onToggleStarfield={() => setIsStarfieldActive(prev => !prev)}
+        isAuroraActive={isAuroraActive}
+        onToggleAurora={() => setIsAuroraActive(prev => !prev)}
+        onOpenContact={() => setIsContactModalOpen(true)}
+        isMobileDrawerOpen={isMobileDrawerOpen}
+        onCloseMobileDrawer={() => setIsMobileDrawerOpen(false)}
+      />
 
       {/* Modals */}
       <ProjectDetailModal 
