@@ -14,6 +14,7 @@ import {
   Waves,
   ArrowUpRight,
   X,
+  Search,
 } from 'lucide-react';
 
 export interface NavSectionItem {
@@ -42,6 +43,7 @@ interface FloatingNavDockProps {
   isAuroraActive: boolean;
   onToggleAurora: () => void;
   onOpenContact: () => void;
+  onOpenSpotlight: () => void;
   isMobileDrawerOpen: boolean;
   onCloseMobileDrawer: () => void;
 }
@@ -55,6 +57,7 @@ export const FloatingNavDock: React.FC<FloatingNavDockProps> = ({
   isAuroraActive,
   onToggleAurora,
   onOpenContact,
+  onOpenSpotlight,
   isMobileDrawerOpen,
   onCloseMobileDrawer,
 }) => {
@@ -119,7 +122,7 @@ export const FloatingNavDock: React.FC<FloatingNavDockProps> = ({
                 onMouseLeave={() => setHoveredId(null)}
                 aria-current={isActive ? 'location' : undefined}
                 className={`relative px-3 py-2 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-transform duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
-                  isHovered ? '-translate-y-0.5 scale-[1.04]' : ''
+                  isHovered ? '-translate-y-1 scale-[1.06]' : ''
                 } ${
                   isActive
                     ? 'text-emerald-800 dark:text-emerald-300'
@@ -145,8 +148,18 @@ export const FloatingNavDock: React.FC<FloatingNavDockProps> = ({
         {/* Hairline Divider */}
         <div className="w-px h-5 bg-stone-300/80 dark:bg-[#232936] mx-1" aria-hidden="true" />
 
-        {/* Ambient Visual Controls + Theme */}
+        {/* Spotlight Launcher + Ambient Visual Controls + Theme */}
         <div className="flex items-center gap-1">
+          <button
+            onClick={onOpenSpotlight}
+            title="Spotlight Search (Cmd+K / Ctrl+K)"
+            aria-label="Open Spotlight Search"
+            className="px-2.5 py-1.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-stone-200/70 dark:hover:bg-[#1a202c] transition-all duration-200 hover:-translate-y-0.5 flex items-center gap-1.5 text-[11px] font-mono cursor-pointer"
+          >
+            <Search className="w-3.5 h-3.5" />
+            <span>&#8984;K</span>
+          </button>
+
           <button
             onClick={onToggleStarfield}
             title={isStarfieldActive ? 'Disable starlight cursor particles' : 'Enable starlight cursor particles'}

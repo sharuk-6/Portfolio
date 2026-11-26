@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, Mail, Phone, MessageSquare, Copy, Check, Send, MapPin } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { SlideCommit } from './SlideCommit';
 
 interface ContactModalProps {
@@ -14,7 +15,16 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
   const [message, setMessage] = useState('');
   const [actionSuccessNotice, setActionSuccessNotice] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   const email = 'shaiksharu10@gmail.com';
   const phone = '+91 95159 94533';
@@ -55,25 +65,46 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div 
-        className="bg-white dark:bg-[#0e1014] border border-stone-200 dark:border-[#232936] rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col text-slate-800 dark:text-slate-300 transition-colors"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-stone-200 dark:border-[#232936]">
-          <div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white font-display">Start a Conversation</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Slide handle across the track to confirm navigation to email, WhatsApp, or phone dialer.</p>
-          </div>
-          <button 
-            onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-lg hover:bg-stone-100 dark:hover:bg-slate-800 transition cursor-pointer"
-            aria-label="Close modal"
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.18 }}
+          onClick={onClose}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Start a Conversation"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/55 dark:bg-black/80 backdrop-blur-md"
+        >
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: 8 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="bg-white/95 dark:bg-[#0d1016]/95 backdrop-blur-2xl border border-stone-200 dark:border-[#262e3d] rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto overscroll-contain shadow-[0_28px_70px_-15px_rgba(0,0,0,0.45)] flex flex-col text-slate-800 dark:text-slate-300 transition-colors"
+            onClick={(e) => e.stopPropagation()}
           >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-stone-200 dark:border-[#232936]">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white font-display">Start a Conversation</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Slide handle across the track to confirm navigation to email, WhatsApp, or phone dialer.</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-stone-100 dark:bg-[#171c26] border border-stone-200 dark:border-[#262e3d] rounded">
+                  ESC
+                </kbd>
+                <button 
+                  onClick={onClose}
+                  className="p-2 text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-lg hover:bg-stone-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
 
         {/* Content */}
         <div className="p-6 space-y-6 text-sm">
@@ -212,7 +243,9 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
           </div>
 
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

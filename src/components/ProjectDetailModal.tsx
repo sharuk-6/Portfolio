@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { X, CheckCircle2, ArrowRight, Layers, Database, Code, Cpu, Terminal, Copy, Check } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X, CheckCircle2, Layers, Cpu, Code, Copy, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { BtpProject } from '../types';
 
 interface ProjectDetailModalProps {
@@ -10,10 +11,19 @@ interface ProjectDetailModalProps {
 export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, onClose }) => {
   const [copiedPayload, setCopiedPayload] = useState(false);
 
-  if (!project) return null;
+  useEffect(() => {
+    if (!project) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [project, onClose]);
 
   const handleCopyPayload = () => {
-    if (project.samplePayload) {
+    if (project?.samplePayload) {
       navigator.clipboard.writeText(project.samplePayload);
       setCopiedPayload(true);
       setTimeout(() => setCopiedPayload(false), 2000);
@@ -21,31 +31,52 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project,
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div 
-        className="bg-white dark:bg-[#0d0f14] border border-stone-200 dark:border-[#232936] rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col text-slate-800 dark:text-slate-300 transition-colors"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-start justify-between p-6 border-b border-stone-200 dark:border-[#232936]">
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="font-mono text-emerald-700 dark:text-emerald-400 text-sm font-bold bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-500/20">
-                APP {project.number}
-              </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400">SAP BTP Enterprise Application</span>
-            </div>
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 font-display">{project.title}</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{project.subtitle}</p>
-          </div>
-          <button 
-            onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-lg hover:bg-stone-100 dark:hover:bg-slate-800 transition cursor-pointer"
-            aria-label="Close modal"
+    <AnimatePresence>
+      {project && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.18 }}
+          onClick={onClose}
+          role="dialog"
+          aria-modal="true"
+          aria-label={project.title}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/55 dark:bg-black/80 backdrop-blur-md"
+        >
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: 8 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="bg-white/95 dark:bg-[#0d1016]/95 backdrop-blur-2xl border border-stone-200 dark:border-[#262e3d] rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto overscroll-contain shadow-[0_28px_70px_-15px_rgba(0,0,0,0.45)] flex flex-col text-slate-800 dark:text-slate-300 transition-colors"
+            onClick={(e) => e.stopPropagation()}
           >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+            {/* Header */}
+            <div className="flex items-start justify-between p-6 border-b border-stone-200 dark:border-[#232936]">
+              <div>
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-emerald-700 dark:text-emerald-400 text-sm font-bold bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-500/20">
+                    APP {project.number}
+                  </span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">SAP BTP Application</span>
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 font-display">{project.title}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{project.subtitle}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-stone-100 dark:bg-[#171c26] border border-stone-200 dark:border-[#262e3d] rounded">
+                  ESC
+                </kbd>
+                <button 
+                  onClick={onClose}
+                  className="p-2 text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-lg hover:bg-stone-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
 
         {/* Modal Body */}
         <div className="p-6 sm:p-8 space-y-8 text-sm">
@@ -150,7 +181,9 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project,
             Close Details
           </button>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

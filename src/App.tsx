@@ -8,9 +8,11 @@ import {
   Moon, 
   GraduationCap, 
   BookOpen, 
-  Menu
+  Menu,
+  Search,
+  Check
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { BtpProject } from './types';
 import { ProjectDetailModal } from './components/ProjectDetailModal';
 import { ContactModal } from './components/ContactModal';
@@ -24,6 +26,7 @@ import { SlideCommit } from './components/SlideCommit';
 import { FloatingNavDock } from './components/FloatingNavDock';
 import { AnimatedCounter } from './components/AnimatedCounter';
 import { BlurText } from './components/BlurText';
+import { SpotlightCommandPalette } from './components/SpotlightCommandPalette';
 
 // Generated image assets
 const BTP_ARCHITECTURE_IMG = '/src/assets/images/sap_btp_data_architecture_1794291064645.jpg';
@@ -141,6 +144,8 @@ export default function App() {
   const [isAuroraActive, setIsAuroraActive] = useState(true);
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isSpotlightOpen, setIsSpotlightOpen] = useState(false);
+  const [hudNotice, setHudNotice] = useState<string | null>(null);
 
   // Theme toggle state (default to dark, persisted in localStorage)
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -190,14 +195,41 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScrollSpy);
   }, []);
 
+  const showHud = (msg: string) => {
+    setHudNotice(msg);
+    setTimeout(() => setHudNotice((prev) => (prev === msg ? null : prev)), 2400);
+  };
+
+  // Global macOS Spotlight shortcut (Cmd+K / Ctrl+K)
+  useEffect(() => {
+    const handleGlobalShortcut = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsSpotlightOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalShortcut);
+    return () => window.removeEventListener('keydown', handleGlobalShortcut);
+  }, []);
+
   const toggleTheme = () => {
-    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+    setTheme((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      showHud(next === 'dark' ? 'Switched to Dark Appearance' : 'Switched to Light Appearance');
+      return next;
+    });
   };
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText('shaiksharu10@gmail.com');
     setCopiedEmail(true);
+    showHud('Email copied to clipboard');
     setTimeout(() => setCopiedEmail(false), 2000);
+  };
+
+  const handleCopyPortfolioLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    showHud('Portfolio link copied to clipboard');
   };
 
   return (
@@ -240,8 +272,18 @@ export default function App() {
             </a>
           </nav>
 
-          {/* Zone 3: Theme/Effects + Mobile Slide-Out Trigger & Primary Action */}
+          {/* Zone 3: Spotlight + Theme + Mobile Slide-Out Trigger & Primary Action */}
           <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => setIsSpotlightOpen(true)}
+              aria-label="Open Spotlight Quick Search"
+              title="Spotlight Search (Cmd+K / Ctrl+K)"
+              className="hidden sm:inline-flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-stone-200/60 hover:bg-stone-300/70 dark:bg-[#141822] dark:hover:bg-[#1e2533] text-slate-600 dark:text-slate-300 border border-stone-300 dark:border-[#232936] text-xs font-mono transition cursor-pointer"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span className="text-[11px]">&#8984;K</span>
+            </button>
+
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -260,6 +302,15 @@ export default function App() {
               className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold text-white dark:text-slate-950 bg-emerald-700 dark:bg-emerald-400 hover:bg-emerald-800 dark:hover:bg-emerald-300 rounded-lg transition-all duration-200 hover:scale-[1.02] whitespace-nowrap shrink-0 shadow-sm cursor-pointer"
             >
               Start a Conversation
+            </button>
+
+            {/* Mobile Spotlight Search Trigger */}
+            <button
+              onClick={() => setIsSpotlightOpen(true)}
+              aria-label="Search sections"
+              className="sm:hidden p-2 rounded-lg bg-stone-200/70 dark:bg-[#141822] text-slate-700 dark:text-slate-200 border border-stone-300 dark:border-[#232936] cursor-pointer"
+            >
+              <Search className="w-4 h-4" />
             </button>
 
             {/* Mobile Slide-Out Drawer Trigger */}
@@ -1040,13 +1091,59 @@ export default function App() {
         theme={theme}
         onToggleTheme={toggleTheme}
         isStarfieldActive={isStarfieldActive}
-        onToggleStarfield={() => setIsStarfieldActive(prev => !prev)}
+        onToggleStarfield={() => {
+          setIsStarfieldActive((prev) => {
+            showHud(!prev ? 'Starlight particles enabled' : 'Starlight particles paused');
+            return !prev;
+          });
+        }}
         isAuroraActive={isAuroraActive}
-        onToggleAurora={() => setIsAuroraActive(prev => !prev)}
+        onToggleAurora={() => {
+          setIsAuroraActive((prev) => {
+            showHud(!prev ? 'Soft Aurora enabled' : 'Soft Aurora paused');
+            return !prev;
+          });
+        }}
         onOpenContact={() => setIsContactModalOpen(true)}
+        onOpenSpotlight={() => setIsSpotlightOpen(true)}
         isMobileDrawerOpen={isMobileDrawerOpen}
         onCloseMobileDrawer={() => setIsMobileDrawerOpen(false)}
       />
+
+      {/* macOS Spotlight Command Palette (Cmd+K / Ctrl+K) */}
+      <SpotlightCommandPalette
+        isOpen={isSpotlightOpen}
+        onClose={() => setIsSpotlightOpen(false)}
+        projects={BTP_PROJECTS}
+        onSelectProject={(proj) => setSelectedProject(proj)}
+        onOpenContact={() => setIsContactModalOpen(true)}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        isStarfieldActive={isStarfieldActive}
+        onToggleStarfield={() => setIsStarfieldActive((prev) => !prev)}
+        isAuroraActive={isAuroraActive}
+        onToggleAurora={() => setIsAuroraActive((prev) => !prev)}
+        onCopyEmail={handleCopyEmail}
+        onCopyPortfolioLink={handleCopyPortfolioLink}
+      />
+
+      {/* macOS-Style Floating Glass HUD Toast */}
+      <AnimatePresence>
+        {hudNotice && (
+          <motion.div
+            initial={{ opacity: 0, y: -14, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.96 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            role="status"
+            aria-live="polite"
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-white/90 dark:bg-[#11151e]/90 backdrop-blur-xl border border-stone-300/80 dark:border-[#2a3345] shadow-xl flex items-center gap-2 text-xs font-medium text-slate-900 dark:text-slate-100 pointer-events-none"
+          >
+            <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>{hudNotice}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Modals */}
       <ProjectDetailModal 
